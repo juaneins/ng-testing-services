@@ -1,6 +1,6 @@
 import { Calculator } from './calculator';
 
-describe('Test for calculator', () => {
+fdescribe('Test for calculator', () => {
   it('#multiply should return a twelve', () => {
     // arrange
     const calculator = new Calculator();
@@ -9,9 +9,7 @@ describe('Test for calculator', () => {
     //assert
     expect(rta).toEqual(12);
   });
-});
 
-describe('Test for calculator', () => {
   it('#multiply should return zero', () => {
     // arrange
     const calculator = new Calculator();
@@ -20,19 +18,22 @@ describe('Test for calculator', () => {
     //assert
     expect(rta).toEqual(0);
   });
-});
 
-describe('Test for calculator', () => {
   it('#divide should return some numbers', () => {
     // arrange
     const calculator = new Calculator();
     expect(calculator.divide(12, 2)).toEqual(6);
-    expect(calculator.divide(12, 0)).toEqual(0);
+
     expect(calculator.divide(5, 1)).toEqual(5);
   });
-});
 
-describe('Test for calculator', () => {
+  it('#divide for zero', () => {
+    // arrange
+    const calculator = new Calculator();
+    expect(calculator.divide(7, 0)).toEqual(0);
+    expect(calculator.divide(12, 0)).toEqual(0);
+  });
+
   it('#test matchers', () => {
     let name = 'juan';
     let name2;

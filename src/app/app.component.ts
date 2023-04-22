@@ -14,7 +14,7 @@ export class AppComponent implements OnInit {
     const prod = calculator.multiply(5, 4);
     // console.log('multiply: ', prod);
 
-    const res = calculator.divide(8, 0);
+    //const res = calculator.divide(8, 0);
     //console.log('divide: ' + res);
   }
 }
