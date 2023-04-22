@@ -39,7 +39,7 @@ module.exports = function (config) {
       },
     },
     reporters: ["mocha"],
-    browsers: ["Chrome"],
+    browsers: ["ChromeHeadless"], // por integracion continua
     restartOnFileChange: true,
   });
 };
