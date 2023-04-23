@@ -6,7 +6,10 @@ import {
 
 import { ProductsService } from './products.service';
 import { Product } from '../models/product.model';
-import { generateManyProducts } from '../models/product.mock';
+import {
+  generateManyProducts,
+  generateOneProduct,
+} from '../models/product.mock';
 import { environment } from 'src/environments/environment';
 
 fdescribe('ProductsService', () => {
@@ -43,5 +46,50 @@ fdescribe('ProductsService', () => {
       req.flush(mockData);
       httpController.verify();
     });
+  });
+
+  describe('test for getAll', () => {
+    it('should return a product list', (doneFn) => {
+      // arrange
+      const mockData: Product[] = generateManyProducts(3);
+      // act
+      productService.getAll().subscribe((data) => {
+        // assert
+        expect(data.length).toEqual(mockData.length);
+        //expect(data).toEqual(mockData); no son iguales x q data en el servicio se agrega la propiedad taxes, mockdata no tiene la propiedad taxes
+        doneFn();
+      });
+      // http config
+      const url = `${environment.API_URL}/api/v1/products`;
+      const req = httpController.expectOne(url);
+      req.flush(mockData);
+      httpController.verify();
+    });
+  });
+  it('should return product list with taxes', (doneFn) => {
+    // arrange
+    const mockData: Product[] = [
+      {
+        ...generateOneProduct(),
+        price: 100, // 100*0.19 = 19
+      },
+      {
+        ...generateOneProduct(),
+        price: 200, // 200*0.19 = 38
+      },
+    ];
+    // act
+    productService.getAll().subscribe((data) => {
+      // assert
+      expect(data.length).toEqual(mockData.length);
+      expect(data[0].taxes).toEqual(19);
+      expect(data[1].taxes).toEqual(38);
+      doneFn();
+    });
+    // http config
+    const url = `${environment.API_URL}/api/v1/products`;
+    const req = httpController.expectOne(url);
+    req.flush(mockData);
+    httpController.verify();
   });
 });
