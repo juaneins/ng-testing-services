@@ -43,25 +43,21 @@ export class ProductsService {
 
   getAll(limit?: number, offset?: number): Observable<Product[]> {
     let params = new HttpParams();
-    if (limit && offset) {
+    if (limit && offset != null) {
       params = params.set('limit', limit);
-      params = params.set('offset', limit);
+      params = params.set('offset', offset);
     }
-    return this.http
-      .get<Product[]>(`${this.apiUrl}/products`, {
-        params,
-      })
-      .pipe(
-        retry(3),
-        map((products) =>
-          products.map((item) => {
-            return {
-              ...item,
-              taxes: 0.19 * item.price,
-            };
-          })
-        )
-      );
+    return this.http.get<Product[]>(`${this.apiUrl}/products`, { params }).pipe(
+      retry(3),
+      map((products) =>
+        products.map((item) => {
+          return {
+            ...item,
+            taxes: item.price > 0 ? 0.19 * item.price : 0,
+          };
+        })
+      )
+    );
   }
 
   fetchReadAndUpdate(id: string, dto: UpdateProductDTO) {
