@@ -15,6 +15,7 @@ import {
   generateOneProduct,
 } from '../models/product.mock';
 import { environment } from 'src/environments/environment';
+import { HttpStatusCode } from '@angular/common/http';
 
 fdescribe('ProductsService', () => {
   let productService: ProductsService;
@@ -126,6 +127,52 @@ fdescribe('ProductsService', () => {
     const params = req.request.params;
     expect(params.get('limit')).toEqual(`${limit}`);
     expect(params.get('offset')).toEqual(`${offset}`);
+  });
+
+  describe('Tests for getOne', () => {
+    it('Should return one product', (doneFn) => {
+      // arrange
+      const mockData: Product = generateOneProduct();
+      const productId = '1';
+
+      // act
+      // se envia como {... dto} para evitar problemas de mutacion del objeto
+      // siempre usar para pruebas con objetos y arrays
+      productService.getOne(productId).subscribe((data) => {
+        // assert
+        expect(data).toEqual(mockData);
+        doneFn();
+      });
+      // http config
+      const url = `${environment.API_URL}/api/v1/products/${productId}`;
+      const req = httpController.expectOne(url);
+      req.flush(mockData);
+      expect(req.request.method).toEqual('GET');
+    });
+  });
+  it('Should return HttpStatusCode.NotFound', (doneFn) => {
+    // arrange
+    const productId = '-1';
+    const errorMsg = '404 message';
+    const errorMock = {
+      status: HttpStatusCode.NotFound,
+      statusText: errorMsg,
+    };
+    // act
+    // se envia como {... dto} para evitar problemas de mutacion del objeto
+    // siempre usar para pruebas con objetos y arrays
+    productService.getOne(productId).subscribe({
+      error: (error) => {
+        // assert
+        expect(error).toEqual('El producto no existe');
+        doneFn();
+      },
+    });
+    // http config
+    const url = `${environment.API_URL}/api/v1/products/${productId}`;
+    const req = httpController.expectOne(url);
+    req.flush(errorMsg, errorMock);
+    expect(req.request.method).toEqual('GET');
   });
 
   describe('Tests for create', () => {
