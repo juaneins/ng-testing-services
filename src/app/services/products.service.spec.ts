@@ -5,7 +5,11 @@ import {
 } from '@angular/common/http/testing';
 
 import { ProductsService } from './products.service';
-import { CreateProductDTO, Product } from '../models/product.model';
+import {
+  CreateProductDTO,
+  Product,
+  UpdateProductDTO,
+} from '../models/product.model';
 import {
   generateManyProducts,
   generateOneProduct,
@@ -149,6 +153,54 @@ fdescribe('ProductsService', () => {
       req.flush(mockData);
       expect(req.request.body).toEqual(dto);
       expect(req.request.method).toEqual('POST');
+    });
+  });
+
+  describe('Tests for update', () => {
+    it('Should update a product', (doneFn) => {
+      // arrange
+      const mockData: Product = generateOneProduct();
+      const productId = '1';
+      const dto: UpdateProductDTO = {
+        title: 'Iphone XS',
+        price: 1450,
+      };
+      // act
+      // se envia como {... dto} para evitar problemas de mutacion del objeto
+      // siempre usar para pruebas con objetos y arrays
+      productService.update(productId, { ...dto }).subscribe((data) => {
+        // assert
+        expect(data).toEqual(mockData);
+        doneFn();
+      });
+      // http config
+      const url = `${environment.API_URL}/api/v1/products/${productId}`;
+      const req = httpController.expectOne(url);
+      req.flush(mockData);
+      expect(req.request.body).toEqual(dto);
+      expect(req.request.method).toEqual('PUT');
+    });
+  });
+
+  describe('Test for delete', () => {
+    it('should delete a product', (doneFn) => {
+      // arrange
+      const mockData = true;
+      const productId = '1';
+
+      // act
+      // se envia como {... dto} para evitar problemas de mutacion del objeto
+      // siempre usar para pruebas con objetos y arrays
+      productService.delete(productId).subscribe((data) => {
+        // assert
+        expect(data).toEqual(mockData);
+        doneFn();
+      });
+      // http config
+      const url = `${environment.API_URL}/api/v1/products/${productId}`;
+      const req = httpController.expectOne(url);
+      req.flush(mockData);
+      expect(req.request.method).toEqual('DELETE');
     });
   });
 });
