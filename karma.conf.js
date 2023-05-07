@@ -40,6 +40,12 @@ module.exports = function (config) {
     },
     reporters: ["mocha"],
     browsers: ["ChromeHeadless"], // por integracion continua
+    customLaunchers: {
+      ChromeHeadlessCI: {
+        base: "ChromeHeadless",
+        flags: ["--no-sandbox"],
+      },
+    },
     restartOnFileChange: true,
   });
 };
