@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { Person } from 'src/app/models/person.model';
 
 @Component({
@@ -8,11 +8,16 @@ import { Person } from 'src/app/models/person.model';
 })
 export class PersonComponent {
   @Input() person: Person = new Person('', '', 0, 0, 0);
+  @Output() onSelected = new EventEmitter<Person>();
   imc = '';
 
   constructor() {}
 
   calcIMC() {
     this.imc = this.person.calcIMC();
+  }
+
+  onClick() {
+    this.onSelected.emit(this.person);
   }
 }
