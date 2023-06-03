@@ -64,4 +64,32 @@ fdescribe('PersonComponent', () => {
     // assert
     expect(h3Element?.textContent).toEqual(expectMsg);
   });
+
+  it('Should display text with IMC when execute calcIMC method', () => {
+    // arrange
+    const expectedMsg = 'overweight';
+    component.person = new Person('Harry', 'Potter', 23, 75, 1.73);
+    const button: HTMLElement = fixture.debugElement.query(
+      By.css('button.btn-imc')
+    ).nativeElement;
+
+    // act
+    component.calcIMC();
+    fixture.detectChanges();
+    // assert
+    expect(button.textContent).toContain(expectedMsg);
+  });
+
+  it('Should display text with IMC when click button', () => {
+    // arrange
+    const expectedMsg = 'overweight';
+    component.person = new Person('Harry', 'Potter', 23, 75, 1.73);
+    const buttonDebug = fixture.debugElement.query(By.css('button.btn-imc'));
+    const buttonElement = buttonDebug.nativeElement;
+    // act
+    buttonDebug.triggerEventHandler('click', null);
+    fixture.detectChanges();
+    // assert
+    expect(buttonElement.textContent).toContain(expectedMsg);
+  });
 });
