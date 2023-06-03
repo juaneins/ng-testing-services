@@ -1,7 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { PersonComponent } from './person.component';
-import { DebugElement } from '@angular/core';
+import { Component, DebugElement } from '@angular/core';
 import { By } from '@angular/platform-browser';
 import { Person } from '../../models/person.model';
 
@@ -106,5 +106,66 @@ fdescribe('PersonComponent', () => {
     fixture.detectChanges();
     // assert
     expect(selectedPerson).toEqual(component.person);
+  });
+});
+
+@Component({
+  template: `<app-person
+    [person]="person"
+    (onSelected)="onSelected($event)"
+  ></app-person>`,
+})
+class HostComponent {
+  person = new Person('John', 'Wick', 46, 78, 1.9);
+  selectedPerson: Person | undefined;
+
+  constructor() {}
+
+  onSelected(person: Person) {
+    this.selectedPerson = person;
+  }
+}
+
+fdescribe('PersonComponent from HostComponent', () => {
+  let component: HostComponent;
+  let fixture: ComponentFixture<HostComponent>;
+
+  beforeEach(async () => {
+    await TestBed.configureTestingModule({
+      declarations: [HostComponent, PersonComponent],
+    }).compileComponents();
+
+    fixture = TestBed.createComponent(HostComponent);
+    component = fixture.componentInstance;
+    fixture.detectChanges();
+  });
+
+  it('should create', () => {
+    expect(component).toBeTruthy();
+  });
+
+  it('should display person name', () => {
+    // arrange
+    const expectedName = component.person.name;
+    const h3Debug = fixture.debugElement.query(By.css('app-person h3'));
+    const h3Element: HTMLElement = h3Debug.nativeElement;
+    // act
+    fixture.detectChanges();
+    // asert
+    expect(h3Element.textContent).toContain(expectedName);
+  });
+
+  it('should raise selected event when clicked', () => {
+    // arrange
+    const expectedName = component.person.name;
+    const btnDebug = fixture.debugElement.query(
+      By.css('app-person .btn-choose')
+    );
+    //const btnElement: HTMLElement = btnDebug.nativeElement;
+    // act
+    btnDebug.triggerEventHandler('click', null);
+    fixture.detectChanges();
+    // asert
+    expect(component.selectedPerson).toEqual(component.person);
   });
 });
