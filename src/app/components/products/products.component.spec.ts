@@ -34,5 +34,22 @@ fdescribe('ProductsComponent', () => {
 
   it('should create', () => {
     expect(component).toBeTruthy();
+    expect(productService.getAll).toHaveBeenCalled();
+  });
+
+  describe('Tests for getAllProducts', () => {
+    it('should return product list from service', () => {
+      // arrange
+      const productsMock = generateManyProducts(10);
+      const countPrev = component.products.length;
+      productService.getAll.and.returnValue(of(productsMock));
+      // act
+      component.getAllProducts();
+      fixture.detectChanges();
+      // assert
+      expect(component.products.length).toEqual(
+        productsMock.length + countPrev
+      );
+    });
   });
 });
