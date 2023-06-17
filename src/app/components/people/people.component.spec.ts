@@ -50,7 +50,7 @@ fdescribe('PeopleComponent', () => {
   });
 
   it('should render selected person', () => {
-    // arranfe
+    // arrange
     const debugButton = fixture.debugElement.query(
       By.css('app-person .btn-choose')
     );

@@ -10,9 +10,10 @@ import { PicoPreviewComponent } from './components/pico-preview/pico-preview.com
 import { TokenInterceptor } from './interceptors/token.interceptor';
 import { PersonComponent } from './components/person/person.component';
 import { PeopleComponent } from './components/people/people.component';
+import { ProductComponent } from './components/product/product.component';
 
 @NgModule({
-  declarations: [AppComponent, ProductsComponent, PicoPreviewComponent, PersonComponent, PeopleComponent],
+  declarations: [AppComponent, ProductsComponent, PicoPreviewComponent, PersonComponent, PeopleComponent, ProductComponent],
   imports: [
     BrowserModule,
     AppRoutingModule,
