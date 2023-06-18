@@ -12,6 +12,7 @@ import { ProductsService } from './../../services/products.service';
 import { ValueService } from './../../services/value.service';
 
 import { generateManyProducts } from './../../models/product.mock';
+import { By } from '@angular/platform-browser';
 
 fdescribe('ProductsComponent', () => {
   let component: ProductsComponent;
@@ -114,5 +115,21 @@ fdescribe('ProductsComponent', () => {
       expect(component.promiseResponse).toEqual(mockMsg);
       expect(valueService.getPromiseValue).toHaveBeenCalled();
     });
+
+    it('should show my mock string in <p> when click the button', fakeAsync(() => {
+      // arrange
+      const mockMsg = 'my mock string';
+      valueService.getPromiseValue.and.returnValue(Promise.resolve(mockMsg));
+      const btnDebug = fixture.debugElement.query(By.css('.btn-promise'));
+      // act
+      btnDebug.triggerEventHandler('click', null);
+      tick();
+      fixture.detectChanges();
+      const pDebug = fixture.debugElement.query(By.css('p.promise-rta'));
+      // assert
+      expect(component.promiseResponse).toEqual(mockMsg);
+      expect(valueService.getPromiseValue).toHaveBeenCalled();
+      expect(pDebug.nativeElement.textContent).toEqual(mockMsg);
+    }));
   });
 });
