@@ -73,5 +73,21 @@ fdescribe('ProductsComponent', () => {
       // assert
       expect(component.status).toEqual('success');
     }));
+
+    it('should change "loading" status to "error"', fakeAsync(() => {
+      // arrange
+      productService.getAll.and.returnValue(
+        defer(() => Promise.reject('error'))
+      );
+      //const countPrev = component.products.length;
+      // act
+      component.getAllProducts();
+      fixture.detectChanges();
+      expect(component.status).toEqual('loading');
+      tick(4000); // exec, obs, setTime, Promise
+      fixture.detectChanges();
+      // assert
+      expect(component.status).toEqual('error');
+    }));
   });
 });

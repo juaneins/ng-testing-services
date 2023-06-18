@@ -22,10 +22,18 @@ export class ProductsComponent implements OnInit {
 
   getAllProducts() {
     this.status = 'loading';
-    this.productsService.getAll(this.limit, this.offset).subscribe((data) => {
-      this.products = [...this.products, ...data];
-      this.offset += this.limit;
-      this.status = 'success';
+    this.productsService.getAll(this.limit, this.offset).subscribe({
+      next: (data) => {
+        this.products = [...this.products, ...data];
+        this.offset += this.limit;
+        this.status = 'success';
+      },
+      error: (error) => {
+        setTimeout(() => {
+          this.products = [];
+          this.status = error;
+        }, 3000);
+      },
     });
   }
 }
